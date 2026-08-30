@@ -68,13 +68,14 @@ const countersError = computed(() => counterErrorIds?.value.has(props.link.id) ?
 const requestUrl = useRequestURL()
 const host = requestUrl.host
 const origin = requestUrl.origin
+const appBase = useRuntimeConfig().app.baseURL.replace(/\/$/, '')
 
 function getLinkHost(url: string): string | undefined {
   const { host } = parseURL(url)
   return host
 }
 
-const shortLink = computed(() => `${origin}/${props.link.slug}`)
+const shortLink = computed(() => `${origin}${appBase}/${props.link.slug}`)
 const linkIcon = computed(() => `https://unavatar.webp.se/${getLinkHost(props.link.url)}?fallback=https://sink.cool/icon.png`)
 const isExpired = computed(() => Boolean(props.link.expiration && props.link.expiration <= Math.floor(Date.now() / 1000)))
 const noteText = computed(() => props.link.comment?.trim() ?? '')
@@ -140,7 +141,7 @@ function copyLink() {
                           hidden
                           sm:inline
                         "
-                      >{{ host }}/{{ link.slug }}</span>
+                      >{{ host }}{{ appBase }}/{{ link.slug }}</span>
                     </NuxtLink>
                   </TooltipTrigger>
                   <TooltipContent class="max-w-[90svw] break-all">
@@ -164,7 +165,7 @@ function copyLink() {
                     hidden
                     sm:inline
                   "
-                >{{ host }}/{{ link.slug }}</span>
+                >{{ host }}{{ appBase }}/{{ link.slug }}</span>
               </NuxtLink>
               <span
                 v-if="link.unsafe"

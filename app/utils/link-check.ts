@@ -11,5 +11,6 @@ export function getDashboardLinkDetailLocation(slug: string, sourceQuery?: Dashb
 }
 
 export function getDashboardLinkDetailUrl(slug: string): string {
-  return `/dashboard/link?slug=${encodeURIComponent(slug)}`
+  const baseURL = useRuntimeConfig().app.baseURL || '/'
+  return `${baseURL.replace(/\/$/, '')}/dashboard/link?slug=${encodeURIComponent(slug)}`
 }

@@ -23,8 +23,12 @@ export async function useAPI(api: string, options?: APIOptions): Promise<unknown
   catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'status' in error && error.status === 401) {
       removeAuthToken()
-      if (import.meta.client && window.location.pathname !== '/dashboard/login')
-        window.location.assign('/dashboard/login')
+      if (import.meta.client) {
+        const baseURL = useRuntimeConfig().app.baseURL || '/'
+        const loginPath = `${baseURL.replace(/\/$/, '')}/dashboard/login`
+        if (window.location.pathname !== loginPath)
+          window.location.assign(loginPath)
+      }
     }
     throw error
   }

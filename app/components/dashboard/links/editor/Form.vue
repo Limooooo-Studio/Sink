@@ -22,6 +22,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const linksSearchStore = useDashboardLinksSearchStore()
 const requestUrl = useRequestURL()
+const appBase = useRuntimeConfig().app.baseURL.replace(/\/$/, '')
 
 const urlValidator = UrlSchema
 const slugValidator = SlugSchema
@@ -148,7 +149,7 @@ watch(currentUrl, (url) => {
   void findDuplicateLink(url, generation)
 }, { immediate: true })
 
-const shortDuplicateLink = computed(() => duplicateLink.value ? `${requestUrl.origin}/${duplicateLink.value.slug}` : '')
+const shortDuplicateLink = computed(() => duplicateLink.value ? `${requestUrl.origin}${appBase}/${duplicateLink.value.slug}` : '')
 
 const { previewMode } = useRuntimeConfig().public
 const isExpiredLink = computed(() => Boolean(

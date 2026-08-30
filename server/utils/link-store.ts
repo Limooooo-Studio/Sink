@@ -28,7 +28,8 @@ export function normalizeSlug(event: H3Event, slug: string): string {
 }
 
 export function buildShortLink(event: H3Event, slug: string): string {
-  return `${getRequestProtocol(event)}://${getRequestHost(event)}/${slug}`
+  const base = useRuntimeConfig(event).app.baseURL || '/'
+  return `${getRequestProtocol(event)}://${getRequestHost(event)}${base.replace(/\/$/, '')}/${slug}`
 }
 
 async function writeThroughCache(event: H3Event, link: Link, effectiveExpiresAt?: number | null): Promise<void> {
