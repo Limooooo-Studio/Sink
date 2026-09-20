@@ -25,6 +25,10 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     siteToken: process.env.NUXT_SITE_TOKEN || randomBytes(32).toString('base64url'),
+    // Limooo：后台登录名固定为 admin@limooo.cn，不随访问域名变化。
+    siteTokenUser: process.env.NUXT_SITE_TOKEN_USER || 'admin@limooo.cn',
+    // Limooo：短链对外域名（服务端 buildShortLink 用），默认 limooo.cn。
+    shortLinkBase: process.env.NUXT_SHORT_LINK_BASE || 'https://limooo.cn',
     cfAccessTeamDomain: '',
     cfAccessAud: '',
     redirectStatusCode: '301',
@@ -51,6 +55,10 @@ export default defineNuxtConfig({
       previewMode: '',
       slugDefaultLength: '6',
       kvBatchLimit: '50',
+      // Limooo：短链对外域名（后台在 sink.limooo.cn 访问，短链走 limooo.cn）。
+      shortLinkBase: process.env.NUXT_PUBLIC_SHORT_LINK_BASE || 'https://limooo.cn',
+      // Limooo：短链路径前缀（limooo.cn/link/<slug>）。
+      linkPrefix: process.env.NUXT_PUBLIC_LINK_PREFIX || '/link',
     },
   },
   routeRules: {

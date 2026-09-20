@@ -47,8 +47,35 @@ function hasOgConfig(link: Link): boolean {
   return !!(link.title || link.image)
 }
 
+/**
+ * Limooo：短链对外前缀。短链挂在主域 limooo.cn 上，为避免与 Pages 主站路径
+ * 冲突，统一走 `/link/<slug>`；后台与 API 仍在根路径。
+ * 可用 NUXT_PUBLIC_LINK_PREFIX 覆盖（空字符串即回到上游的根路径行为）。
+ */
+function stripLinkPrefix(path: string, prefix: string): string {
+  if (!prefix)
+    return path
+  const normalized = prefix.startsWith('/') ? prefix : `/${prefix}`
+  if (path === normalized || path === `${normalized}/`)
+    return '/'
+  if (path.startsWith(`${normalized}/`))
+    return path.slice(normalized.length)
+  return path
+}
+
 export default eventHandler(async (event) => {
-  const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, ''))
+  const linkPrefix = useRuntimeConfig(event).public.linkPrefix
+  // 配了前缀时，短链只在前缀下解析；前缀外的路径交给 SPA/其他路由处理。
+  const prefixNormalized = linkPrefix
+    ? (linkPrefix.startsWith('/') ? linkPrefix : `/${linkPrefix}`)
+    : ''
+  if (prefixNormalized) {
+    const isUnderPrefix = event.path === prefixNormalized || event.path.startsWith(`${prefixNormalized}/`)
+    if (!isUnderPrefix)
+      return
+  }
+  const effectivePath = stripLinkPrefix(event.path, linkPrefix)
+  const { pathname: slug } = parsePath(effectivePath.replace(/^\/|\/$/g, ''))
   const { slugRegex, reserveSlug } = useAppConfig()
   const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore } = useRuntimeConfig(event)
   const { cloudflare } = event.context
