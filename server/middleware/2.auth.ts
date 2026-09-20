@@ -6,9 +6,12 @@ export default eventHandler(async (event) => {
 
   const token = getHeader(event, 'Authorization')?.replace(/^Bearer\s+/, '')
   if (await verifySiteToken(token, useRuntimeConfig(event).siteToken)) {
+    const { siteTokenUser } = useRuntimeConfig(event)
     event.context.authMethod = 'site-token'
     event.context.userID = 'root'
-    event.context.userEmail = `root@${getRequestURL(event).hostname}`
+    // Limooo：登录名固定，不随访问域名变化（原为 root@<hostname>，用 sink.limooo.cn
+    // 进后台会显示 root@sink.limooo.cn）。可用 NUXT_SITE_TOKEN_USER 覆盖。
+    event.context.userEmail = siteTokenUser || `root@${getRequestURL(event).hostname}`
     return
   }
 

@@ -67,15 +67,17 @@ const countersError = computed(() => counterErrorIds?.value.has(props.link.id) ?
 
 const requestUrl = useRequestURL()
 const host = requestUrl.host
-const origin = requestUrl.origin
+// Limooo：短链展示统一用 limooo.cn（后台在 sink.limooo.cn），未配置则沿用请求域名。
+const origin = useRuntimeConfig().public.shortLinkBase || requestUrl.origin
 const appBase = useRuntimeConfig().app.baseURL.replace(/\/$/, '')
+const linkPrefix = useRuntimeConfig().public.linkPrefix || ''
 
 function getLinkHost(url: string): string | undefined {
   const { host } = parseURL(url)
   return host
 }
 
-const shortLink = computed(() => `${origin}${appBase}/${props.link.slug}`)
+const shortLink = computed(() => `${origin}${appBase}${linkPrefix}/${props.link.slug}`)
 const linkIcon = computed(() => `https://unavatar.webp.se/${getLinkHost(props.link.url)}?fallback=https://sink.cool/icon.png`)
 const isExpired = computed(() => Boolean(props.link.expiration && props.link.expiration <= Math.floor(Date.now() / 1000)))
 const noteText = computed(() => props.link.comment?.trim() ?? '')
