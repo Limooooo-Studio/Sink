@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
   ],
   devtools: { enabled: true },
+  // Limooo 部署：站点挂在 sink.limooo.cn 根路径（历史遗留的 /sink 子路径已废弃）。
+  // 显式写死 app.baseURL，避免 Host 上的 NUXT_APP_BASE_URL 环境变量再次把它改回 /sink/。
+  app: {
+    baseURL: '/',
+  },
   css: ['@/assets/css/tailwind.css'],
   colorMode: {
     classSuffix: '',
@@ -49,8 +54,8 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    '/sink/dashboard': {
-      redirect: '/sink/dashboard/links',
+    '/dashboard': {
+      redirect: '/dashboard/links',
     },
     '/api/**': {
       cors: process.env.NUXT_API_CORS === 'true',
