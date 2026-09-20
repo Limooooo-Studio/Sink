@@ -12,6 +12,11 @@
     "nodejs_compat"
   ],
   "keep_vars": true,
+  // Limooo：站点只通过自定义域 sink.limooo.cn 提供服务。
+  // workers.dev 裸域是同一实例的第二个入口且绕过人机门禁，必须关闭；
+  // preview_urls 同理（每次部署的 *.workers.dev 预览地址）。
+  "workers_dev": false,
+  "preview_urls": false,
   "upload_source_maps": true,
   "observability": {
     "logs": {
