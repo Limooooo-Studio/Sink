@@ -66,7 +66,6 @@ const retryCounters = inject(RETRY_LINK_COUNTERS_KEY)
 const countersError = computed(() => counterErrorIds?.value.has(props.link.id) ?? false)
 
 const requestUrl = useRequestURL()
-const host = requestUrl.host
 // Limooo：短链展示统一用 limooo.cn（后台在 sink.limooo.cn），未配置则沿用请求域名。
 const origin = useRuntimeConfig().public.shortLinkBase || requestUrl.origin
 const appBase = useRuntimeConfig().app.baseURL.replace(/\/$/, '')
@@ -143,7 +142,7 @@ function copyLink() {
                           hidden
                           sm:inline
                         "
-                      >{{ host }}{{ appBase }}/{{ link.slug }}</span>
+                      >{{ shortLink }}</span>
                     </NuxtLink>
                   </TooltipTrigger>
                   <TooltipContent class="max-w-[90svw] break-all">
@@ -167,7 +166,7 @@ function copyLink() {
                     hidden
                     sm:inline
                   "
-                >{{ host }}{{ appBase }}/{{ link.slug }}</span>
+                >{{ shortLink }}</span>
               </NuxtLink>
               <span
                 v-if="link.unsafe"
