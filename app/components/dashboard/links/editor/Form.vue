@@ -149,7 +149,9 @@ watch(currentUrl, (url) => {
   void findDuplicateLink(url, generation)
 }, { immediate: true })
 
-const shortDuplicateLink = computed(() => duplicateLink.value ? `${requestUrl.origin}${appBase}/${duplicateLink.value.slug}` : '')
+const linkPrefix = useRuntimeConfig().public.linkPrefix || ''
+const shortLinkOrigin = useRuntimeConfig().public.shortLinkBase || requestUrl.origin
+const shortDuplicateLink = computed(() => duplicateLink.value ? `${shortLinkOrigin}${appBase}${linkPrefix}/${duplicateLink.value.slug}` : '')
 
 const { previewMode } = useRuntimeConfig().public
 const isExpiredLink = computed(() => Boolean(
